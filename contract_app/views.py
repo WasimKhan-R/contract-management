@@ -15,7 +15,8 @@ from django.contrib import messages
 # import pprint
 from django import forms
 from pprint import pprint
-
+import random
+import hashlib
 from contract_app.common import CheckUserLogin
 
 
@@ -244,32 +245,39 @@ def new_contract(request):
 
 
 def add_employee(request):
-    # print('here ajax work bc!')
-
     if request.method == 'POST':
-        contact_person_name = request.GET.get("roles", None)
-        print(contact_person_name)
+        loginid = request.session.get('companyid')
+        empname = request.POST.get("empname", None)
+        empemailid = request.POST.get("empemailid", None)
+        empmobile = request.POST.get("empmobile", None)
+        isactive = '1'
+        creationdate = datetime.now()
+        addNewEmployee = ClientDetails(loginid=loginid,empname=empname, empemailid=empemailid,empmobile=empmobile,isactive=isactive, creationdate=creationdate)
+        addNewEmployee.save()
 
-    #     loginid = '1'
-    #     client_company_name = request.POST['client_company_name']
-    #     pan_no = request.POST['pan_no']
-    #     registration_no = request.POST['registration_no']
-    #     gst_no = request.POST['gst_no']
-    #     address = request.POST['address']
-    #     country = request.POST['country']
-    #     state = request.POST['state']
-    #     city = request.POST['city']
-    #     contact_person_name = request.POST['contact_person_name']
-    #     contact_person_email = request.POST['contact_person_email']
-    #     contact_person_mobileno = request.POST['contact_person_mobileno']
-    #     isactive = '1'
-        # creationdate = datetime.now()
-        # newclient = Clientmaster(client_company_name=client_company_name, pan_no=pan_no, registration_no=registration_no, gst_no=gst_no, address=address, country=country, state=state, city=city,
-                                #  contact_person_name=contact_person_name, contact_person_email=contact_person_email, contact_person_mobileno=contact_person_mobileno, loginid=loginid, isactive=isactive, creationdate=creationdate)
-        # newclient.save()
-    # statess = States.objects.all()
-    # context = {
-    #     'statess': statess
-    # }
+        roles = request.POST.get("roles", None)
+        for role in roles: 
+            permission_id = role
+            login_id = '1'
+            permission_status = '1'
+            created_date = datetime.now()
+            modified_date = datetime.now()
+            AddEmployeeUserPermission = UserPermissionDetails(permission_id=permission_id,login_id=login_id,permission_status=permission_status,created_date=created_date,modified_date=modified_date)
+            AddEmployeeUserPermission.save()
 
+        companyid = request.session.get('companyid')
+        loginid = request.POST.get("empemailid", None)
+        first5letter = loginid[:5]
+        conver_string= random.randint(000,999) 
+        final_password = first5letter+str(conver_string)
+        convert_password_formate = final_password
+        # password = hashlib.md5(final_password).hexdigest()
+        password =final_password
+        normalpwd = convert_password_formate
+        user_role= '1'
+        isactive = '1'
+        creationdate = datetime.now()
+        addNewEmployee = Loginmaster(companyid=companyid,loginid=loginid,password=password, normalpwd=normalpwd,user_role=user_role,isactive=isactive, creationdate=creationdate)
+        addNewEmployee.save()
+        print(addNewEmployee)
     return render(request, 'add_employee.html', {})
