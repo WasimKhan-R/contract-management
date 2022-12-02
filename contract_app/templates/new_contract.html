@@ -1,0 +1,537 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style type="text/css">
+	.form-control {
+		margin-bottom: 20px;
+	}
+
+	.panel-flat>.stepy-header {
+		border-top: none;
+	}
+</style>
+
+<div class="content">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="panel panel-flat">
+				<form class="stepy-validation" enctype="multipart/form-data" method="post" id="contractNew">
+					<fieldset title="1">
+						<legend class="text-semibold">Details</legend>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Company Name<span class="text-danger">*</span></label>
+							<div class="col-sm-8">
+								<select class="form-control" name="clientid" id="clientid" required>
+									<option value="">Select Company</option>
+									{% for Clientmasterdetail in Clientmasterdetails %}
+
+									<option value="Clientmasterdetail.client_company_name">{{ Clientmasterdetail.client_company_name }}</option>
+									{% endfor %}
+
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group" id="displaybox">
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Contract Type<span
+									class="text-danger">*</span></label>
+							<div class="col-sm-8">
+								<select class="form-control" name="contract_type" id="contract_type" required>
+									<option value="">Select Contract Type</option>
+									{% for DocTypeMaster in DocTypeMasters %}
+									<option value="{{ DocTypeMaster.id }}">{{ DocTypeMaster.name }}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Contract Purpose
+							</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" name="contract_purpose" id="contract_purpose"
+									placeholder="Contract Purpose" required>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Non Compete clause
+							</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" name="noncompete" id="noncompete"
+									placeholder="Non Compete clause">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Consideration
+							</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" name="consideration" id="consideration"
+									placeholder="Consideration">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Condition Precident
+							</label>
+							<div class="col-sm-8">
+								<select name="condition_precident" class="form-control" id="condition_precident">
+									<option value="">Select option</option>
+									<option value="yes">Yes</option>
+									<option value="no">No</option>
+								</select>
+
+							</div>
+						</div>
+						<div class="form-group condition_precident_details" style="display:none;">
+							<label class="col-sm-3 control-label">Condition Precident Details
+							</label>
+							<div class="col-sm-8">
+
+								<input type="text" name="condition_precident_details" id="condition_precident_details"
+									placeholder='Condition Precident Details' class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Condition Subsequent
+							</label>
+							<div class="col-sm-8">
+								<select name="conditions_subsequent" class="form-control" id="conditions_subsequent">
+									<option value="">Select option</option>
+									<option value="yes">Yes</option>
+									<option value="no">No</option>
+								</select>
+
+							</div>
+						</div>
+						<div class="form-group conditions_subsequent_details" style="display:none;">
+							<label class="col-sm-3 control-label">Condition Subsequent Details
+							</label>
+							<div class="col-sm-8">
+
+								<input type="text" name="conditions_subsequent_details"
+									id="conditions_subsequent_details" placeholder='Condition Subsequent Details'
+									class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">Remark
+							</label>
+							<div class="col-sm-8">
+								<input type="text" class="form-control" name="remarks" id="remarks"
+									placeholder="Remark">
+							</div>
+						</div>
+						<div class="clearfix"></div>
+
+					</fieldset>
+
+					<fieldset title="2">
+						<legend class="text-semibold">Attachments</legend>
+						<div class="row form-group">
+							<label class="col-sm-3">Select your document <span class="text-danger">*</span></label>
+							<div class="col-sm-8" style="margin-bottom: 20px;">
+								<input type="file" name="document" id='document' class="file-styled"
+									onChange="validate(this.value)" required>
+							</div>
+						</div>
+
+						<!-- <div class="form-group">
+                            <label>Select your document <span class="text-danger">*</span></label><br>
+                            <input type="file" name="document[]" id='document' class="file-styled"onChange="validate(this.value)"  multiple="multiple" >
+                        </div> -->
+
+						<div class="row">
+							<div class="col-md-6 form-group">
+								<label>Creater Name<span class="text-danger">*</span></label><br>
+								<input type="text" value="" id="createdby" class="form-control" name="createdby"
+									readonly>
+								<input type="hidden" value="" id="createdbyid" class="form-control" name="createdbyid">
+							</div>
+							<div class="col-md-6 form-group">
+								<label>Reviewer Name<span class="text-danger">*</span></label><br>
+								<select class="form-control" name="reviewdby" id="reviewdby" required>
+									<option value="">Select Reviewer</option>
+									<option value="<?php echo $emp['id']; ?>"></option>
+								</select>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 form-group">
+								<label>Approver Name<span class="text-danger">*</span></label><br>
+								<select class="form-control" name="approvedby" id="approvedby" required>
+									<option value="">Select Approver</option>
+									<option value=""></option>
+								</select>
+							</div>
+							<div class="col-md-6 form-group">
+								<label>Document Stage<span class="text-danger">*</span></label><br>
+								<select class="form-control" name="detail" id="detail" required>
+									<option value="review">Review</option>
+									<option value="approve">Approve</option>
+									<option value="exceution">Execution</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 form-group">
+								<label>Duration</label><br>
+								<div class="row">
+									<div class="col-sm-6">
+										<input type="text" class="form-control onlyNumber" maxlength="2" name="duration"
+											id="duration" placeholder="Duration" required>
+									</div>
+									<div class="col-sm-6">
+										<select class="form-control" onChange="getexpirydate()" name="seldate"
+											id="seldate">
+											<option value="" selected>Selected The Period</option>
+											<option value="Month">Month</option>
+											<option value="Year">Year</option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-md-6 form-group">
+								<label>Expiry Date</label><br>
+								<input type="text" class="form-control" name="expirydate" id="expirydate"
+									placeholder="Expiry Date" readonly>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-md-6 form-group">
+								<label>Review Date</label><br>
+								<input type="text" class="form-control datepicker" name="1stsigningdate"
+									id="1stsigningdate" placeholder="Review Date" required
+									onchange="chkreviewdate_validation()" value="">
+								<input type="hidden" name="sign_date" id="sign_date" value="">
+							</div>
+							<div class="col-md-6 form-group">
+								<label>Client Signing Date</label><br>
+								<input type="text" class="form-control datepicker" name="executiondate"
+									id="executiondate" placeholder="Client Signing Date" required
+									onchange="chkexpirydate_validation()" value="">
+								<input type="hidden" name="chk_exe_date" id="chk_exe_date" value="">
+							</div>
+						</div>
+
+						<p id="demo"></p>
+
+					</fieldset>
+					<div class="clearfix"></div>
+					<button type="submit" id="submitnewcontract" class="btn btn-primary stepy-finish">Submit<i
+							class="icon-check position-right"></i></button>
+				</form>
+			</div>
+		</div>
+	</div>
+	{% endblock content %}
+
+
+	<script type="text/javascript">
+
+
+
+		$("#1stsigningdate").datepicker({
+			dateFormat: 'yy-mm-dd',
+			minDate: 0 // 0 days offset = today
+		});
+
+		$("#executiondate").datepicker({
+			dateFormat: 'yy-mm-dd'
+		});
+
+		function chkreviewdate_validation() {
+			var expiry_date = $('#expirydate').val();
+			var review_date = $('#1stsigningdate').val();
+			var client_signing_date = $('#executiondate').val();
+
+			if (review_date > expiry_date) {
+				$('#sign_date').val('1');
+				swal('Warning', 'Please select date which is less than to expiry date', 'warning');
+				//$('#1stsigningdate').val(' ');
+			} else {
+				$('#sign_date').val('0');
+			}
+		}
+
+		function chkexpirydate_validation() {
+			var expiry_date = $('#expirydate').val();
+			var review_date = $('#1stsigningdate').val();
+			var client_signing_date = $('#executiondate').val();
+
+			if (client_signing_date > expiry_date) {
+				$('#chk_exe_date').val('1');
+				swal('Warning', 'Please select date which is less than to expiry date', 'warning');
+				//$('#executiondate').val(' ');
+			} else {
+				$('#chk_exe_date').val('0');
+			}
+
+
+			if (review_date > client_signing_date) {
+				$('#sign_date').val('1');
+				swal('Warning', 'Please select review date which is less than to client signing date', 'warning');
+			} else {
+				$('#sign_date').val('0');
+			}
+
+
+		}
+
+		function validate(file) {
+			var ext = file.split(".");
+			ext = ext[ext.length - 1].toLowerCase();
+			var arrayExtensions = ["doc", "docx"];
+
+			if (arrayExtensions.lastIndexOf(ext) == -1) {
+				alert("Only accept doc file");
+				$("#document").val("");
+			}
+		}
+		$("input[type='file']").on("change", function () {
+
+			if (this.files[0].size > 2000000) {
+				alert("Please upload file less than 2MB. Thanks!!");
+				$(this).val('');
+			}
+
+		});
+		$('#condition_precident').change(function () {
+			if ($(this).val() == 'yes') {
+				$('.condition_precident_details').show();
+
+			} else {
+				$('.condition_precident_details').hide();
+
+			}
+		});
+		$('#conditions_subsequent').change(function () {
+			if ($(this).val() == 'yes') {
+				$('.conditions_subsequent_details').show();
+
+			} else {
+				$('.conditions_subsequent_details').hide();
+
+			}
+		});
+
+		$("#fupForm").on('submit', function (e) {
+			e.preventDefault();
+			let doc = $("#document").val();
+			let filename = $("#filename").val();
+			alert('createdby');
+			alert('reviewdby');
+			let createby = $("#createdby").val();
+			let reviewdby = $("#reviewdby").val();
+			let approvedby = $("#approvedby").val();
+			let detail = $("#detail").val();
+			let duration = $("#duration").val();
+			let expirydate = $("#expirydate").val();
+			let stsigningdate = $("#1stsigningdate").val();
+			let executiondate = $("#executiondate").val();
+			let clientid = $("#clientid").val();
+			let contract_type = $("#contract_type").val();
+			let contract_purpose = $("#contract_purpose").val();
+			let noncompete = $("#noncompete").val();
+			let consideration = $("#consideration").val();
+			let condition_precident = $("#condition_precident").val();
+			let condition_precident_details = $("#condition_precident_details").val();
+			let conditions_subsequent = $("#conditions_subsequent").val();
+			let conditions_subsequent_details = $("#conditions_subsequent_details").val();
+
+			if (clientid == '')
+				swal('Warning', 'Please Select The Document', 'warning');
+			else if (createby == '')
+				swal('Warning', 'Please Select createby', 'warning')
+			else if (reviewdby == '')
+				swal('Warning', 'Please Select reviewdby', 'warning')
+			else if (approvedby == '')
+				swal('Warning', 'Please Select approvedby', 'warning')
+			else if (detail == '')
+				swal('Warning', 'Please Select detail', 'warning')
+			else if (duration == '')
+				swal('Warning', 'Please Select duration', 'warning')
+			else if (expirydate == '')
+				swal('Warning', 'Please Select expirydate', 'warning')
+			else if (stsigningdate == '')
+				swal('Warning', 'Please Select stsigningdate', 'warning')
+			else if (executiondate == '')
+				swal('Warning', 'Please Select executiondate', 'warning')
+			else if (clientid == '')
+				swal('Warning', 'Please Select clientid', 'warning')
+			else if (contract_type == '')
+				swal('Warning', 'Please Select contract_type', 'warning')
+			else if (contract_purpose == '')
+				swal('Warning', 'Please Select contract_purpose', 'warning')
+			else if (noncompete == '')
+				swal('Warning', 'Please Select noncompete', 'warning')
+			else if (consideration == '')
+				swal('Warning', 'Please Select consideration', 'warning')
+			// else if(condition_precident=='')
+			//  swal('Warning','Please Select condition_precident','warning')
+			else if (condition_precident == 'yes') {
+				if (condition_precident_details == '') {
+					swal('Warning', 'Please Select condition_precident_details', 'warning')
+				}
+			} else if (conditions_subsequent == 'yes') {
+				if (conditions_subsequent_details == '') {
+					swal('Warning', 'Please Select conditions_subsequent_details', 'warning')
+				}
+
+			} else {
+				$.ajax({
+					type: 'POST',
+					url: 'new_contracts',
+					data: new FormData(this),
+					dataType: 'json',
+					contentType: false,
+					cache: false,
+					processData: false,
+
+					beforeSend: function () {
+						$('#upload_doc').attr("disabled", "disabled");
+					},
+					success: function (response) {
+						if (response == '1') {
+							swal('Success', 'Contracts uploaded successfully', 'success')
+							setTimeout(function () {
+								window.location.href = BASE_URL + "admin/my_contracts";
+							}, 2000);
+						} else {
+							swal('Warning', 'Contracts not uploaded successfully, Please Try Again', 'warning')
+						}
+					}
+				});
+			}
+		});
+
+
+		function getexpirydate() {
+			$enddateval = $('#duration').val();
+			$endduration = $('#seldate').val();
+			rurl = 'https://ebix.legatoapp.com/admin/date';
+			$.ajax({
+				type: "GET",
+				data: {
+					'duration': $enddateval,
+					'seldate': $endduration
+				},
+				url: rurl,
+				success: function (data) {
+					$('#expirydate').attr(data);
+					textField = document.getElementById("expirydate");
+					textField.value = data;
+				}
+			});
+		}
+		// $('#displaybox').css('display', 'none');
+		$("#clientid").on('change', function () {
+			var clientname = $("#clientid option:selected").text();
+			$('#displaybox').empty();
+			$.ajax({
+				url: BASE_URL + 'admin/showmore/',
+				method: "POST",
+				dataType: "JSON",
+				async: false,
+				data: {
+					client: clientname
+				},
+
+				success: function (response) {
+					$('#displaybox').append(response);
+				}
+			});
+		});
+
+	// $(document).onchange(function() {
+	// style="display:none;
+
+	// });
+
+
+	// function showmore() {
+	// 	$.ajax({
+	// 		url: admin / showmore,
+	// 		data: {
+	// 			offset: $('#offset').val()
+	// 		},
+	// 		type: json,
+	// 		success: function(data) {
+	// 			// $('#show-more').prepand(data.view)
+	// 			$('#newcontract').val(data.offset)
+	// 			// $('#newcontract').val(data)
+
+	// 		}
+	// 	})
+	// }
+	// function onclick() {
+	// 		var content = '';
+	// 		var element = $(this);
+	// 		var repovalue = element.attr("id");
+	// 		if (repovalue.includes('_')) {
+	// 			var valarray = repovalue.split("_");
+	// 			var clientname = valarray[0];
+	// 			var docfolder = valarray[1];
+	// 			var requesturl = "https://ebix.legatoapp.com/admin/fileList/" + clientname + "/" + docfolder;
+	// 		} else {
+	// 			var clientname = repovalue;
+	// 			var requesturl = "https://ebix.legatoapp.com/admin/fileList/" + clientname;
+
+	// 		}
+
+	// 		var fileList = ''
+	// 		if (docfolder == '') {
+	// 			var docfolder = "mainFolder";
+	// 		}
+
+	// 		var classname = $(this).parent().parent().parent().prop('className');
+
+	// 		$.ajax({
+	// 			url: requesturl,
+	// 			method: "POST",
+	// 			async: false,
+	// 			dataType: "JSON",
+	// 			success: function(data) {
+	// 				content = $("#filelist_html").html();
+	// 				fileList = data.clients;
+	// 				if (classname == "row grid-main grid") {
+	// 					i = 1;
+	// 					if (fileList == '') {
+	// 						// alert(fileList);
+
+	// 						alert('No Folder');
+	// 					} else {
+	// 						$.each(fileList, function(index, value) {
+	// 							content += '<p>' + value + "</p>";
+	// 							i++;
+	// 							if (i == 6)
+	// 								return false;
+	// 						});
+	// 					}
+	// 				} else {
+	// 					i = 1;
+	// 					if (fileList == '') {
+	// 						// alert('No Folder');
+
+	// 						// return false;
+	// 					} else {
+	// 						$.each(fileList, function(index, value) {
+	// 							content += '<p>' + value + "</p>";
+	// 							i++;
+	// 							if (i == 6)
+	// 								return false;
+	// 						});
+	// 					}
+	// 					content = content.replace(/p_filename/g, fileList[0]);
+	// 				}
+	// 			}
+	// 		});
+	// 		return content;
+	// 	}
+	</script>

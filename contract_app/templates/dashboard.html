@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<h6 class="panel-title text-semibold mb-15">Dashboard </h6>
+			<p> {{ request.loginid }} </p>
+		</div>
+
+		<div class="container-fluid home-section">
+			<div class="row flexbox-row">
+				<div class="col-sm-6 col-md-6 equal-height">
+					<div class="panel">
+						<div class="panel-heading">
+							<h6 class="panel-title text-semibold text-center">My Contracts</h6>
+						</div>
+						<!-- add loop from here -->
+						<div class="panel-body" style="padding:10px;">
+							<div class="row text-center">
+								<div class="col-xs-4 mb-10">
+									<a href="#" class="btn-default btn-block btn-float">
+										<h2 id="count" class="text-blue-600 text-semibold no-margin">
+											
+										</h2>
+										<span>Total No of Contracts</span>
+									</a>
+								</div>
+								<div class="col-xs-4 mb-10">
+									<a href="#" class="btn-default btn-block btn-float btn-float-lg">
+										<h2 class="text-success-400 text-semibold no-margin" id="contreview"
+											data-num="<?php echo $reviewdcount; ?>">
+											
+										</h2>
+										<span>Contracts Reviewed </span>
+									</a>
+								</div>
+								<div class="col-xs-4 mb-10">
+									<a href="#" class="btn-default btn-block btn-float btn-float-lg">
+										<h2 class="text-indigo-400 text-semibold no-margin">
+											
+										</h2>
+										<span>Contracts Approved</span>
+									</a>
+								</div>
+								<div class="col-xs-4 mb-10">
+									<a href="#" class="btn-default btn-block btn-float btn-float-lg">
+										<h2 class="text-danger-400 text-semibold no-margin">
+											
+										</h2>
+										<span>Contracts Due</span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Contact Requests status  -->
+				<div class="col-sm-6 col-md-6 equal-height">
+					<div class="panel panel-flat" style="width:100%;">
+						<div class="panel-heading">
+							<h6 class="panel-title text-semibold text-center">Contact Requests</h6>
+						</div>
+
+						<div class="panel-body">
+							<ul class="progress-list">
+								<li id="pending">Contacts Pending Review<span>
+									
+									</span></li>
+
+								<li>Contracts Due <span>
+										
+									</span></li>
+
+								<li>My Contacts Requests<span></span></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row flexbox-row">
+				<!-- Calendar widget -->
+
+				<div class="col-sm-6 col-md-4 equal-height">
+					<div class="panel has-scroll" style="width:100%;">
+						<div class="panel-heading">
+							<h6 class="panel-title text-semibold text-center">My Calendar</h6>
+						</div>
+
+						<div class="datepicker" id="calender">
+							<!-- <input type="button" class="btn btn-success" id="calender" value="Get Date" />  -->
+						</div>
+					</div>
+				</div>
+
+				<!-- List of latest updates  -->
+				<div class="col-sm-6 col-md-4 equal-height">
+					<div class="panel" style="width:100%;">
+						<div class="panel-heading">
+							<h6 class="panel-title text-semibold">Contracts due</h6>
+							<div class="heading-elements">
+								<a href="'admin/my_contracts';" class="heading-text">See all &rarr;</a>
+							</div>
+						</div>
+
+						<div class="panel-body" id="binding">
+							<!--<div class="calendar-data">
+								<div class="calendar-data-item">Comments: 0</div>
+								<div class="calendar-data-item">Views: 144</div>
+								<div class="calendar-data-item">Likes:0</div>
+							</div>-->
+
+							<div class='calendar-data'>
+								<div class='calendar-data-item'> </div>
+								<div class='calendar-data-item'> </div>
+								<div class='calendar-data-item'></div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+				<!-- <div class="col-sm-6 col-md-4 equal-height">
+					<div class="panel panel-flat" style="width:100%;">
+						<div class="panel-heading">
+							<h6 class="panel-title text-semibold">Contact Expiring In</h6>
+						</div>
+
+						<div class="panel-body">
+							<div class="svg-center" id="rounded_progress_single"></div>
+						</div>
+					</div>
+				</div> -->
+				<div class="col-sm-6 col-md-4 equal-height">
+					<div class="panel panel-flat" style="width:100%;">
+						<div class="panel-heading">
+							<h5 class="panel-title text-semibold">Total Contracts</h5>
+
+							<div class="heading-elements">
+								<ul class="icons-list">
+									<li><a data-action="collapse"></a></li>
+									<li><a data-action="reload"></a></li>
+									<li><a data-action="close"></a></li>
+								</ul>
+							</div>
+						</div>
+
+						<style>
+							.chart {
+								min-width: auto !important;
+								height: 210px !important;
+							}
+
+							.chart canvas {
+								width: 100% !important;
+								height: 210px !important;
+							}
+
+							.chart div:nth-child(1) {
+								width: 100% !important;
+								height: 250px !important;
+							}
+						</style>
+						<div class="">
+							<div class="chart-container">
+								<div class="chart has-fixed-height has-minimum-width" id="pie_basic">
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+{% endblock content %}

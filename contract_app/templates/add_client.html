@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style type="text/css">
+    .form-control {
+        margin-bottom: 20px;
+    }
+</style>
+
+
+<div class="content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-flat">
+                <form action="" method="post">
+                    {% csrf_token %}
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Company Name<span class="text-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="client_company_name" id="client_company_name"
+                                placeholder="Company Name" required>
+                        </div>
+                        <span style="color:red;display: none;" id="nameerror">Company name already exist</span>
+                        <span style="color:red;display: none;" id="spacevalidation">Space Not Allow Please Follow
+                            This
+                            Pattern (company_name_more...)</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Pancard No.<span class="text-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" maxlength="10" name="pan_no" id="pan_no" placeholder="Pancard No."
+                                required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Company Registration No.<span
+                                class="text-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="registration_no" maxlength='16'
+                                id="registration_no" placeholder="Company Registration No." required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">GST No.<span class="text-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="gst_no" id="gst_no" placeholder="GST No."
+                                required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Address<span class="text-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <textarea name="address" id="address" class="form-control" required></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" style="padding:10px">Country<span
+                                class="text-danger">*</span></label>
+                        <div class="col-sm-8" style="padding:10px">
+                            <select class="form-control select" id="country" name="country">
+                                <option value="">Select country</option>
+                                <option value="1">India</option>
+                                <option value="0">Others</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" style="padding:10px">State<span
+                                class="text-danger">*</span></label>
+                        <div class="col-sm-8" style="padding:10px" id="indiastate">
+
+                            <select class="form-control select" id="state" name="state">
+
+                                <option value="">Select state</option>
+                                {% for States in statess %}
+                                <option value="{{ States.id }}">{{ States.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-sm-8" style="display:none" id="otherstate">
+                            <input type="text" name="state" class='inputstate form-control' placeholder='State'
+                                id="state" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" style="padding:10px">City<span
+                                class="text-danger">*</span></label>
+                        <div class="col-sm-8" style="padding:10px">
+                            <input type="text" class="form-control" name="city" id="city" placeholder="City" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Contact person name<span
+                                class="text-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="contact_person_name" id="contact_person_name"
+                                placeholder="Contact person name" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Contact person email id<span
+                                class="text-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" name="contact_person_email"
+                                placeholder="Contact person email id" id="contact_person_email"
+                                placeholder="Contact person name" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Contact person Mobileno<span
+                                class="text-danger">*</span></label>
+                        <div class="col-sm-8">
+                            <!-- onkeypress="return /^[0-9\s]*$/.test(event.key)" maxlength='13' -->
+                            <input type="text" class="form-control onlyNumber" name="contact_person_mobileno"
+                                maxlength='10' id="mobileno" placeholder="Contact person Mobileno" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label"></label>
+                        <div class="col-sm-8">
+                            <p align="center">
+                                <button type="submit" id="add_company" class="btn btn-success">Add Company</button>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+{% block js %}
+
+<script type="text/javascript">
+    $('#add_company').click(function () {
+        let client_company_name = $('#client_company_name').val();
+        let pan_no = $('#pan_no').val();
+        let registration_no = $('#registration_no').val();
+        let gst_no = $('#gst_no').val();
+        let address = $('#address').val();
+        let country = $('#country').val();
+        let state = $('#state').val();
+        let city = $('#city').val();
+        let contact_person_name = $('#contact_person_name').val();
+        let contact_person_email = $('#contact_person_email').val();
+        let contact_person_mobileno = $('#mobileno').val();
+        if (client_company_name == '')
+            swal('Warning', 'Please Enter Company Name', 'warning');
+        else if (pan_no == '')
+            swal('Warning', 'Please Enter Pancard No.', 'warning');
+        else if (registration_no == '')
+            swal('Warning', 'Please Enter Company Registration No.', 'warning');
+        else if (gst_no == '')
+            swal('Warning', 'Please Enter GST No.', 'warning');
+        else if (address == '')
+            swal('Warning', 'Please Enter address.', 'warning');
+        else if (country == '')
+            swal('Warning', 'Please Enter country.', 'warning');
+        else if (state == '')
+            swal('Warning', 'Please Enter state.', 'warning');
+        else if (city == '')
+            swal('Warning', 'Please Enter city.', 'warning');
+        else if (contact_person_name == '')
+            swal('Warning', 'Please Enter Contact person name', 'warning');
+        else if (contact_person_email == '')
+            swal('Warning', 'Please Enter Contact person email', 'warning');
+        else if (IsEmail(contact_person_email) == false) {
+            swal('Warning', 'Please Enter Correct  Email id', 'warning')
+            return false;
+        }
+        else if (contact_person_mobileno == '')
+            swal('Warning', 'Please Enter Contact person Mobile Number.', 'warning');
+        else if ((contact_person_mobileno.length) < 10) {
+            swal('Warning', 'Mobile no. should be 10 digit', 'warning')
+        } 
+    });
+
+    $('#pan_no').change(function(event) {
+ 		var regExp = /[A-Z]{5}\d{4}[a-zA-Z]{1}/;
+ 		var txtpan = $(this).val();
+ 		if (txtpan.length == 10) {
+ 			if (txtpan.match(regExp)) {
+ 				$('#add_company').attr("disabled", false);
+ 			} else {
+ 				swal('Warning', 'Not a valid PAN number - Format Should Be :CGNBB####S', 'warning')
+ 				event.preventDefault();
+ 				$('#pan_no').focus();
+ 				$('#add_company').attr("disabled", true);
+ 			}
+ 		} else {
+ 			swal('Warning', 'Please enter 10 digits for a valid PAN number', 'warning')
+ 			event.preventDefault();
+ 			$('#pan_no').focus();
+ 			$('#add_company').attr("disabled", true);
+ 		}
+ 	});
+
+     $('#country').on('change', function() {
+ 		var country = this.value;
+
+ 		if (country == 0) {
+
+ 			$('#otherstate').css('display', 'block');
+ 			$('#indiastate ').css('display', 'none');
+ 		} else {
+ 			$('#otherstate').css('display', 'none');
+ 			$('#indiastate').css('display', 'block');
+
+ 		}
+
+ 	});
+
+    $('#client_company_name').on('blur', function() {
+ 		var contact_person_name = $('#client_company_name').val();
+        let url = "{% url 'validate_nickname' %}";
+ 		$.ajax({
+ 			url: url,
+ 			type: 'GET',
+ 			data: {
+ 				'contact_person_name': contact_person_name,
+ 			},
+ 			success: function(response) {
+                if (response == 'taken') {
+ 					$('#add_company').attr("disabled", true);
+ 					$('#client_company_name').focus();
+ 					$('#nameerror').show();
+
+ 				} else if (response == 'not_taken') {
+ 					$('#add_company').attr("disabled", false);
+ 					$('#nameerror').hide();
+ 				}
+ 			},
+            error: function (response) {
+                console.log(response)
+            }
+ 		});
+ 	});
+
+     $("#registration_no").change(function(event) {
+ 		var regExp = /[A-Z]{5}\d{4}[a-zA-Z]{7}/;
+ 		var txtpan = $(this).val();
+ 		if (txtpan.length == 16) {
+ 			if (txtpan.match(regExp)) {
+ 				$('#add_company').attr("disabled", false);
+ 			} else {
+ 				swal('Warning', 'Not a valid Registration number - Format Should Be :YHUPH####asputhf', 'warning')
+ 				html: true
+ 				event.preventDefault();
+ 				$('#registration_no').focus();
+ 				$('#add_company').attr("disabled", true);
+ 			}
+ 		} else {
+ 			swal('Warning', 'Please enter 16 digits for a valid Registration number', 'warning')
+ 			event.preventDefault();
+ 			$('#registration_no').focus();
+ 			$('#add_company').attr("disabled", true);
+ 		}
+ 	});
+</script>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="content">
+    <div class="row">
+        <div class="col-sm-12" style="padding:0 10px 20px;">
+            <a href="{% url 'add_employee' %}" class="btn btn-info btn-lg pull-right">Add Employee</a>
+        </div>
+        <div class="col-lg-12">
+            <div class="panel panel-flat">
+                <div class="table-responsive">
+                    <table class="table datatable-reorder example">
+                        <thead>
+                            <tr>
+                                <th>Sr.No.</th>
+                                <th>Employee Name</th>
+                                <th>Employee Mobile</th>
+                                <th>Employee Email id</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ClientDetail in ClientDetailss %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ ClientDetail.empname  }}</td>
+                                <td>{{ ClientDetail.empmobile  }}</td>
+                                <td>{{ ClientDetail.empemailid  }}</td>
+                                <td>
+                                    <a class="btn btn-success" href="{% url 'edit_employee' ClientDetail.id %}">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                                    </a>
+                                    <a class="btn btn-danger" href="">
+                                        <i class="fa fa-trash" aria-hidden="true"></i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock content %}
+    <script>
+        $(document).ready(function () {
+            $('.example').DataTable();
+            $(".deleteemployee").click(function () {
+                var id = this.id;
+                swal({
+                    title: "Are you sure?",
+                    text: "You want to delete this Employee?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: '#DD6B55',
+                    confirmButtonText: 'Yes, I am sure!',
+                    cancelButtonText: "No, cancel it!",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                    function (isConfirm) {
+
+                        if (isConfirm) {
+                            location.href = 'employee_delete/' + id;
+
+                        } else {
+                            swal("Cancelled", "Your Employee is safe :)", "error");
+                            e.preventDefault();
+                        }
+                    });
+            });
+        });
+    </script>

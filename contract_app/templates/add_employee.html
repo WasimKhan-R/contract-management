@@ -1,0 +1,321 @@
+{% extends 'base.html' %}
+{% block content %}
+<style type="text/css">
+    .form-control {
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-flat">
+                {% csrf_token %}
+                <div class="panel-body">
+                    <div class="section1">
+                        <h2 class="text-center">Add </sup> Details</h1>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Employee Name <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="empname" id="empname"
+                                        placeholder="Employee Name" required />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Employee Email<span
+                                        class="text-danger">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" name="empemailid" id="empemailid"
+                                        placeholder="Employee Email" required onblur="checkemail(this.value)" />
+                                    <span style="color:red;display: none;" id="emailerror">Email id already
+                                        exist</span>
+                                    <!-- <input type="hidden" name="chkmail" id="chkmail" value=""> -->
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Employee Mobile no <span
+                                        class="text-danger">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="tel" class="form-control onlyNumber" name="empmobile" maxlength='10'
+                                        id="empmobile" pattern="[789][0-9]{9}" placeholder="Employee Mobile no."
+                                        required />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label"></label>
+                                <div class="col-sm-8">
+                                    <p align="center">
+                                        <button id="add_employee_step1" class="btn btn-success">Next</button>
+                                    </p>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="section2" style="display:none;">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="panel panel-flat">
+                                    <div class="table-responsive">
+                                        <table id="table" class="table datatable-reorder example text-center">
+                                            <thead>
+                                                <tr>
+                                                    <th style="background:#f7f7f7;">Employee</th>
+                                                    <th class="text-center">Create Contract</th>
+                                                    <th class="text-center">Review Contract</th>
+                                                    <th class="text-center">Approve Contract</th>
+                                                    <th class="text-center">Create Repository</th>
+                                                    <th class="text-center">Create Clients</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="background:#f7f7f7;" class="text-left"><span
+                                                            id="ename"></span></td>
+                                                    <td>
+                                                        <input type="checkbox" id="roles[]" name="roles1" value="1"
+                                                            class="styled checkval">
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" id="roles[]" name="roles2" value="2"
+                                                            class="styled checkval">
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" id="roles[]" name="roles3" value="3"
+                                                            class="styled checkval">
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" id="roles[]" name="roles4" value="4"
+                                                            class="styled checkval">
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" id="roles[]" name="roles5" value="5"
+                                                            class="styled checkval">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label"></label>
+                                    <div class="col-sm-8">
+                                        <p align="center">
+                                            <button id="add_employee" type="submit" class="btn btn-success">Add
+                                                Employee</button>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block js %}
+<script>
+    $(document).ready(function () {
+        $('#table').DataTable();
+        // function CheckNumber(number) {
+        //     var regex = /^[0-9]+$/;
+        //     alert(number);
+        //     if (!regex.test(number)) {
+        //         return false;
+        //     } else {
+        //         return true;
+        //     }
+        // }
+        // $("#empmobile").on("blur", function () {
+        //     var mobNum = $(this).val();
+        //     var filter = /^\d*(?:\.\d{1,2})?$/;
+        //     if (filter.test(mobNum)) {
+        //         if (mobNum.length == 10) {
+        //             $("#mobile-valid").removeClass("hidden");
+        //             $("#folio-invalid").addClass("hidden");
+        //         } else {
+        //             swal('Warning', 'Please Select The Documenssst', 'warning');
+        //             alert('Please put 10  digit mobile number');
+        //             $("#folio-invalid").removeClass("hidden");
+        //             $("#mobile-valid").addClass("hidden");
+        //             return false;
+        //         }
+        //     }
+        //     else {
+        //         alert('Not a valid number');
+        //         $("#folio-invalid").removeClass("hidden");
+        //         $("#mobile-valid").addClass("hidden");
+        //         return false;
+        //     }
+        // });
+
+
+        $("#add_employee_step1").click(function () {
+            let empname = $("#empname").val();
+            let empemailid = $("#empemailid").val();
+            let empmobile = $("#empmobile").val();
+            // var chkemail = IsEmail(empemailid);
+            // var emailexist = $("#chkmail").val();
+            if (empname == '') {
+                swal('Warning', 'Please Enter Employee Name', 'warning');
+            } else if (empemailid == '') {
+                swal('Warning', 'Please Enter Employee Email id', 'warning');
+            }
+            //  else if (chkemail == false) {
+            //     swal('Warning', 'Please write valid e-mail format', 'warning');
+            // }
+            else if (empmobile == '') {
+                swal('Warning', 'Please Enter Employee Mobile no.', 'warning');
+            } else if ((empmobile.length) < 10) {
+                swal('Warning', 'Mobile no. should be 10 digit', 'warning')
+            } else if (empemailid == '1') {
+                swal('Warning', 'Your Gmail Id Is All Ready Taken', 'warning');
+            }
+
+            else {
+                $(".section2").show()
+                $(".section1").hide()
+                //     $("#ename").text(empname);
+
+                $('#add_employee').attr('disabled', false);
+                $("#add_employee").click(function () {
+
+                    if ($('input:checkbox').filter(':checked').length < 1) {
+
+                        swal('Warning', 'Please Check Atleast One Role', 'warning');
+                    }
+                    else {
+
+                        var roleval = '';
+                        $(':checkbox:checked').each(function (i) {
+                            roleval += $(this).val() + ',';
+                        });
+                        roleval = roleval.replace(/,\s*$/, "");
+                    }
+                    let url = "{% url 'add_employee' %}";
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: {
+                            'empname': empname,
+                            'empemailid': empemailid,
+                            'empmobile': empmobile,
+                            'roles': roleval,
+                            'csrfmiddlewaretoken': '{{ csrf_token }}'
+                        },
+                        success: function (response) {
+                            alert('insert sucess')
+                        //     if (response == 'taken') {
+                        //         $('#add_company').attr("disabled", true);
+                        //         $('#client_company_name').focus();
+                        //         $('#nameerror').show();
+
+                        //     } else if (response == 'not_taken') {
+                        //         $('#add_company').attr("disabled", false);
+                        //         $('#nameerror').hide();
+                        //     }
+                        // },
+                        // error: function (response) {
+                        //     console.log(response)
+                        }
+                    });
+                });
+
+
+
+                // $.post(BASE_URL + 'admin/add_employee/', data, function (fb) {
+                //     console.log(fb);
+                //     $('#add_employee').attr('disabled', false);
+                //     if (fb.match('1')) {
+                //         swal('Success', 'Employee added successfullyyyy', 'success')
+                //         setTimeout(function () {
+                //             window.location.href = "../admin/employees";
+                //         }, 2000);
+                //     }
+                //     else {
+                //         swal('Warning', 'Employee not added successfully, Please Try Again', 'warning')
+                //     }
+                // })
+            }
+        });
+
+        function onButtonClick() {
+            $(".section2").show()
+            $(".section1").hide()
+            $("#ename").text(empname);
+            $('#add_employee').attr('disabled', false);
+        };
+        var obj = { 'report_array': report_array }
+        data = {
+            'empname': empname,
+            'empemailid': empemailid,
+            'empmobile': empmobile
+        }
+
+        $("#add_employee").click(function () {
+            ////////
+            $.ajax({
+                type: 'POST',
+                url: '/add_employee/',
+                // contentType: 'application/json; charset=utf-8', //EDITED
+                data: data,
+                success: function (data) {
+                    alert(data) //EDITED
+                },
+                error: function (rs, e) {
+                    alert(rs.responseText);
+                }
+
+            });
+
+        });
+
+        // $("#add_employee").click(function () {
+        //     let empname = $("#empname").val();
+        //     let empemailid = $("#empemailid").val();
+        //     let empmobile = $("#empmobile").val();
+        //     if ($('input:checkbox').filter(':checked').length < 1) {
+        //         swal('Warning', 'Please Check Atleast One Role', 'warning');
+        //     }
+        //     else {
+        //         var roleval = '';
+        //         $(':checkbox:checked').each(function (i) {
+        //             roleval += $(this).val() + ',';
+        //         });
+        //         roleval = roleval.replace(/,\s*$/, "");
+        //         //$('#add_employee').attr('disabled', true);
+        //         $.ajax({
+        //             url: '/AddEmployessss/',
+        //             type: 'POST',// This is the default though, you don't actually need to always mention it
+        //             data: {
+        //                 'empname': empname,
+        //                 'empemailid': empemailid,
+        //                 'empmobile': empmobile,
+        //                 'roles': roleval
+        //             },
+        //             success: function (data) {
+        //             },
+        //             failure: function (data) {
+        //                 alert('Got an error dude');
+        //             }
+        //         });
+        //         // $.post(BASE_URL + 'admin/add_employee/', data, function (fb) {
+        //         //     //console.log(fb);
+        //         //     //$('#add_employee').attr('disabled', false);
+        //         //     if (fb.match('1')) {
+        //         //         swal('Success', 'Employee added successfulllly', 'success')
+        //         //         setTimeout(function () {
+        //         //             window.location.href = BASE_URL + "admin/employees";
+        //         //         }, 2000);
+        //         //     }
+        //         //     else {
+        //         //         swal('Warning', 'Employee not added successfully, Please Try Again', 'warning')
+        //         //     }
+        //         // })
+        //     }
+        // });
+    });
+</script>
+{% endblock js %}
